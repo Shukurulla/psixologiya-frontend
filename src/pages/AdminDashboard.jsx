@@ -6,12 +6,15 @@ import {
   BarChartOutlined,
   FileTextOutlined,
   AlertOutlined,
+  UnorderedListOutlined,
 } from "@ant-design/icons";
 import Layout from "../components/common/Layout";
 import Dashboard from "../components/admin/Dashboard";
 import Statistics from "../components/admin/Statistics";
 import FacultyStats from "../components/admin/FacultyStats";
 import GroupStats from "../components/admin/GroupStats";
+import AttentionNeeds from "../components/admin/AttentionNeeds";
+import DetailedResults from "../components/admin/DetailedResults";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -30,6 +33,18 @@ const AdminDashboard = () => {
       onClick: () => navigate("/admin/statistics"),
     },
     {
+      key: "/admin/results",
+      icon: <UnorderedListOutlined />,
+      label: "Batafsil natijalar",
+      onClick: () => navigate("/admin/results"),
+    },
+    {
+      key: "/admin/attention",
+      icon: <AlertOutlined />,
+      label: "E'tibor talab",
+      onClick: () => navigate("/admin/attention"),
+    },
+    {
       key: "/admin/faculties",
       icon: <TeamOutlined />,
       label: "Fakultetlar",
@@ -41,12 +56,6 @@ const AdminDashboard = () => {
       label: "Guruhlar",
       onClick: () => navigate("/admin/groups"),
     },
-    {
-      key: "/admin/attention",
-      icon: <AlertOutlined />,
-      label: "E'tibor talab",
-      onClick: () => navigate("/admin/attention"),
-    },
   ];
 
   return (
@@ -54,6 +63,8 @@ const AdminDashboard = () => {
       <Routes>
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="statistics" element={<Statistics />} />
+        <Route path="results" element={<DetailedResults />} />
+        <Route path="attention" element={<AttentionNeeds />} />
         <Route path="faculties" element={<FacultyStats />} />
         <Route path="groups" element={<GroupStats />} />
         <Route path="*" element={<Dashboard />} />
