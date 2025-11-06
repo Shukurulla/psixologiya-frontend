@@ -3,7 +3,6 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import Login from "./pages/Login";
 import StudentDashboard from "./pages/StudentDashboard";
-import AdminDashboard from "./pages/AdminDashboard";
 import ProtectedRoute from "./components/common/ProtectedRoute";
 
 function App() {
@@ -17,15 +16,6 @@ function App() {
           element={
             <ProtectedRoute role="student">
               <StudentDashboard />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/admin/*"
-          element={
-            <ProtectedRoute role="admin">
-              <AdminDashboard />
             </ProtectedRoute>
           }
         />
