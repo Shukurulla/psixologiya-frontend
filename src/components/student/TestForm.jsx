@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   Card,
@@ -65,7 +65,7 @@ const TestForm = () => {
     Modal.confirm({
       title: "Testni topshirish",
       icon: <ExclamationCircleOutlined />,
-      content: "Barcha javoblaringiz saqlansa\nadi. Davom etmoqchimisiz?",
+      content: "Barcha javoblaringiz saqlansadi. Davom etmoqchimisiz?",
       okText: "Ha, topshirish",
       cancelText: "Bekor qilish",
       onOk: submitTest,
@@ -129,11 +129,13 @@ const TestForm = () => {
   const progress = ((currentQuestion + 1) / test.data.questions.length) * 100;
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <Card className="mb-4">
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold mb-2">{test.data.name}</h2>
-          <p className="text-gray-600 mb-4">{test.data.instruction}</p>
+    <div className="max-w-4xl mx-auto px-2 sm:px-4">
+      <Card className="mb-3 sm:mb-4">
+        <div className="mb-4 sm:mb-6">
+          <h2 className="text-lg sm:text-2xl font-bold mb-2">Test {test.data.order || ''}</h2>
+          <p className="text-sm sm:text-base text-gray-600 mb-4">
+            Iltimos, har bir savolga diqqat bilan javob bering. To'g'ri yoki noto'g'ri javob yo'q, faqat sizning fikringiz muhim.
+          </p>
           <Progress
             percent={Math.round(progress)}
             status="active"
@@ -142,7 +144,7 @@ const TestForm = () => {
               "100%": "#87d068",
             }}
           />
-          <p className="text-center mt-2 text-gray-600">
+          <p className="text-center mt-2 text-sm sm:text-base text-gray-600">
             Savol {currentQuestion + 1} / {test.data.questions.length}
           </p>
         </div>
@@ -156,23 +158,24 @@ const TestForm = () => {
             transition={{ duration: 0.3 }}
           >
             <Card className="bg-gray-50">
-              <h3 className="text-lg font-semibold mb-4">{question.text}</h3>
+              <h3 className="text-base sm:text-lg font-semibold mb-4">{question.text}</h3>
 
               <Radio.Group
                 value={answers[question.id]}
                 onChange={(e) => handleAnswerChange(e.target.value)}
                 className="w-full"
               >
-                <Space direction="vertical" className="w-full">
+                <Space direction="vertical" className="w-full" size="small">
                   {question.options.map((option) => (
                     <motion.div
                       key={option.value}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
+                      className="w-full"
                     >
                       <Radio
                         value={option.value}
-                        className="w-full p-3 hover:bg-white rounded-lg transition-colors"
+                        className="w-full p-2 sm:p-3 hover:bg-white rounded-lg transition-colors text-sm sm:text-base"
                       >
                         {option.label}
                       </Radio>
@@ -184,13 +187,15 @@ const TestForm = () => {
           </motion.div>
         </AnimatePresence>
 
-        <div className="flex justify-between mt-6">
+        <div className="flex justify-between mt-4 sm:mt-6 gap-2">
           <Button
             icon={<ArrowLeftOutlined />}
             onClick={handlePrevious}
             disabled={currentQuestion === 0}
+            size="large"
+            className="flex-1 sm:flex-initial"
           >
-            Oldingi
+            <span className="hidden sm:inline">Oldingi</span>
           </Button>
 
           {currentQuestion === test.data.questions.length - 1 ? (
@@ -199,6 +204,8 @@ const TestForm = () => {
               icon={<CheckCircleOutlined />}
               onClick={handleSubmit}
               loading={submitting}
+              size="large"
+              className="flex-1 sm:flex-initial"
             >
               Topshirish
             </Button>
@@ -208,8 +215,10 @@ const TestForm = () => {
               icon={<ArrowRightOutlined />}
               onClick={handleNext}
               disabled={!answers[question.id]}
+              size="large"
+              className="flex-1 sm:flex-initial"
             >
-              Keyingi
+              <span className="hidden sm:inline">Keyingi</span>
             </Button>
           )}
         </div>
@@ -217,15 +226,17 @@ const TestForm = () => {
 
       {/* Question Navigation */}
       <Card>
-        <h4 className="font-semibold mb-3">Savollar navigatsiyasi</h4>
-        <div className="grid grid-cols-10 gap-2">
+        <h4 className="font-semibold mb-3 text-sm sm:text-base">Savollar navigatsiyasi</h4>
+        <div className="grid grid-cols-5 sm:grid-cols-8 md:grid-cols-10 gap-2">
           {test.data.questions.map((q, index) => (
             <Button
               key={q.id}
               type={answers[q.id] ? "primary" : "default"}
-              className={
-                currentQuestion === index ? "ring-2 ring-blue-500" : ""
-              }
+              size="small"
+              className={`
+                ${currentQuestion === index ? "ring-2 ring-blue-500" : ""}
+                text-xs sm:text-sm
+              `}
               onClick={() => setCurrentQuestion(index)}
             >
               {index + 1}

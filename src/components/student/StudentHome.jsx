@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Card,
   Row,
@@ -43,27 +43,27 @@ const StudentHome = () => {
   }
 
   return (
-    <div>
+    <div className="px-2 sm:px-0">
       {/* Welcome Section */}
       <motion.div
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5 }}
-        className="mb-6"
+        className="mb-4 sm:mb-6"
       >
         <Card className="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
-          <h1 className="text-2xl font-bold mb-2">
+          <h1 className="text-lg sm:text-2xl font-bold mb-2">
             Xush kelibsiz, {user?.full_name}!
           </h1>
-          <p className="text-white/90">
+          <p className="text-white/90 text-xs sm:text-sm">
             {user?.department?.name} | {user?.group?.name} | {user?.level?.name}
           </p>
         </Card>
       </motion.div>
 
       {/* Statistics Cards */}
-      <Row gutter={[16, 16]} className="mb-6">
-        <Col xs={24} sm={12} lg={6}>
+      <Row gutter={[12, 12]} className="mb-4 sm:mb-6">
+        <Col xs={12} sm={12} lg={6}>
           <motion.div
             variants={cardVariants}
             initial="hidden"
@@ -72,16 +72,16 @@ const StudentHome = () => {
           >
             <Card className="card-hover">
               <Statistic
-                title="Jami testlar"
+                title={<span className="text-xs sm:text-sm">Jami testlar</span>}
                 value={stats?.data?.totalTests || 0}
-                prefix={<FileTextOutlined />}
-                valueStyle={{ color: "#1677ff" }}
+                prefix={<FileTextOutlined className="text-sm sm:text-base" />}
+                valueStyle={{ color: "#1677ff", fontSize: "20px" }}
               />
             </Card>
           </motion.div>
         </Col>
 
-        <Col xs={24} sm={12} lg={6}>
+        <Col xs={12} sm={12} lg={6}>
           <motion.div
             variants={cardVariants}
             initial="hidden"
@@ -90,16 +90,16 @@ const StudentHome = () => {
           >
             <Card className="card-hover">
               <Statistic
-                title="Topshirilgan"
+                title={<span className="text-xs sm:text-sm">Topshirilgan</span>}
                 value={stats?.data?.completedTests || 0}
-                prefix={<CheckCircleOutlined />}
-                valueStyle={{ color: "#52c41a" }}
+                prefix={<CheckCircleOutlined className="text-sm sm:text-base" />}
+                valueStyle={{ color: "#52c41a", fontSize: "20px" }}
               />
             </Card>
           </motion.div>
         </Col>
 
-        <Col xs={24} sm={12} lg={6}>
+        <Col xs={12} sm={12} lg={6}>
           <motion.div
             variants={cardVariants}
             initial="hidden"
@@ -108,16 +108,16 @@ const StudentHome = () => {
           >
             <Card className="card-hover">
               <Statistic
-                title="Kutilmoqda"
+                title={<span className="text-xs sm:text-sm">Kutilmoqda</span>}
                 value={stats?.data?.pendingTests || 0}
-                prefix={<ClockCircleOutlined />}
-                valueStyle={{ color: "#faad14" }}
+                prefix={<ClockCircleOutlined className="text-sm sm:text-base" />}
+                valueStyle={{ color: "#faad14", fontSize: "20px" }}
               />
             </Card>
           </motion.div>
         </Col>
 
-        <Col xs={24} sm={12} lg={6}>
+        <Col xs={12} sm={12} lg={6}>
           <motion.div
             variants={cardVariants}
             initial="hidden"
@@ -126,11 +126,11 @@ const StudentHome = () => {
           >
             <Card className="card-hover">
               <Statistic
-                title="Bajarilish"
+                title={<span className="text-xs sm:text-sm">Bajarilish</span>}
                 value={stats?.data?.completionRate || 0}
                 suffix="%"
-                prefix={<TrophyOutlined />}
-                valueStyle={{ color: "#722ed1" }}
+                prefix={<TrophyOutlined className="text-sm sm:text-base" />}
+                valueStyle={{ color: "#722ed1", fontSize: "20px" }}
               />
             </Card>
           </motion.div>
@@ -138,14 +138,17 @@ const StudentHome = () => {
       </Row>
 
       {/* Progress and Recent Results */}
-      <Row gutter={[16, 16]}>
+      <Row gutter={[12, 12]}>
         <Col xs={24} lg={12}>
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.5 }}
           >
-            <Card title="Test bajarish jarayoni" className="card-hover">
+            <Card
+              title={<span className="text-sm sm:text-base">Test bajarish jarayoni</span>}
+              className="card-hover"
+            >
               <Progress
                 percent={stats?.data?.completionRate || 0}
                 strokeColor={{
@@ -154,7 +157,7 @@ const StudentHome = () => {
                 }}
                 status="active"
               />
-              <p className="mt-4 text-gray-600">
+              <p className="mt-4 text-xs sm:text-sm text-gray-600">
                 {stats?.data?.completedTests || 0} ta test topshirildi,{" "}
                 {stats?.data?.pendingTests || 0} ta test qoldi
               </p>
@@ -168,15 +171,18 @@ const StudentHome = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.6 }}
           >
-            <Card title="So'nggi natijalar" className="card-hover">
+            <Card
+              title={<span className="text-sm sm:text-base">So'nggi natijalar</span>}
+              className="card-hover"
+            >
               {stats?.data?.recentResults?.length > 0 ? (
                 <List
                   dataSource={stats.data.recentResults}
-                  renderItem={(item) => (
-                    <List.Item>
-                      <div className="flex justify-between w-full">
-                        <span>{item.testName}</span>
-                        <Tag color="green">
+                  renderItem={(item, index) => (
+                    <List.Item className="px-0">
+                      <div className="flex flex-col sm:flex-row sm:justify-between w-full gap-1 sm:gap-0">
+                        <span className="text-xs sm:text-sm">Test {item.testOrder || index + 1}</span>
+                        <Tag color="green" className="text-xs self-start sm:self-auto">
                           {new Date(item.completedAt).toLocaleDateString()}
                         </Tag>
                       </div>
