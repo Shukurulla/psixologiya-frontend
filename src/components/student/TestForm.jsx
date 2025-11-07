@@ -160,6 +160,17 @@ const TestForm = () => {
             <Card className="bg-gray-50">
               <h3 className="text-base sm:text-lg font-semibold mb-4">{question.text}</h3>
 
+              {question.image && (
+                <div className="mb-4">
+                  <img
+                    src={question.image}
+                    alt="Savol rasmi"
+                    className="max-w-full h-auto rounded-lg border border-gray-300"
+                    style={{ maxHeight: '300px' }}
+                  />
+                </div>
+              )}
+
               <Radio.Group
                 value={answers[question.id]}
                 onChange={(e) => handleAnswerChange(e.target.value)}
@@ -177,7 +188,16 @@ const TestForm = () => {
                         value={option.value}
                         className="w-full p-2 sm:p-3 hover:bg-white rounded-lg transition-colors text-sm sm:text-base"
                       >
-                        {option.label}
+                        <div className="flex items-center space-x-3">
+                          {option.image && (
+                            <img
+                              src={option.image}
+                              alt="Variant rasmi"
+                              className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded border border-gray-300"
+                            />
+                          )}
+                          <span>{option.label}</span>
+                        </div>
                       </Radio>
                     </motion.div>
                   ))}

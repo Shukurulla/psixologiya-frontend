@@ -2,7 +2,7 @@ import axios from "axios";
 import { authService } from "./auth";
 import { message } from "antd";
 
-const API_URL = "https://psixologiya-server.vercel.app/api";
+const API_URL = "https://server.qmu-psixologik.uz/api";
 
 // Create axios instance
 const api = axios.create({
