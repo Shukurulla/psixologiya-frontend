@@ -128,6 +128,24 @@ const TestForm = () => {
   const question = test.data.questions[currentQuestion];
   const progress = ((currentQuestion + 1) / test.data.questions.length) * 100;
 
+  // Lyusher testi uchun: allaqachon tanlangan ranglarni filtrlaymiz
+  const isLuscherTest = test.data.scoringMethod === 'luscher';
+  const selectedValues = Object.values(answers);
+
+  // Faqat hozirgi savoldan oldingi javoblarni olamiz
+  const previousAnswers = test.data.questions
+    .slice(0, currentQuestion)
+    .map(q => answers[q.id])
+    .filter(Boolean);
+
+  const filteredOptions = isLuscherTest
+    ? question.options.filter(option => !previousAnswers.includes(option.value))
+    : question.options;
+
+  console.log('Lyusher test:', isLuscherTest);
+  console.log('Oldingi javoblar:', previousAnswers);
+  console.log('Filtrlangan variantlar:', filteredOptions.length);
+
   return (
     <div className="max-w-4xl mx-auto px-2 sm:px-4">
       <Card className="mb-3 sm:mb-4">
@@ -177,7 +195,7 @@ const TestForm = () => {
                 className="w-full"
               >
                 <Space direction="vertical" className="w-full" size="small">
-                  {question.options.map((option) => (
+                  {filteredOptions.map((option) => (
                     <motion.div
                       key={option.value}
                       whileHover={{ scale: 1.02 }}
@@ -190,11 +208,18 @@ const TestForm = () => {
                       >
                         <div className="flex items-center space-x-3">
                           {option.image && (
-                            <img
-                              src={option.image}
-                              alt="Variant rasmi"
-                              className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded border border-gray-300"
-                            />
+                            option.image.startsWith('#') ? (
+                              <div
+                                className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg border-2 border-gray-300 shadow-md"
+                                style={{ backgroundColor: option.image }}
+                              />
+                            ) : (
+                              <img
+                                src={option.image}
+                                alt="Variant rasmi"
+                                className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded border border-gray-300"
+                              />
+                            )
                           )}
                           <span>{option.label}</span>
                         </div>
