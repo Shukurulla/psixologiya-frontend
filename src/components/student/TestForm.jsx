@@ -141,9 +141,11 @@ const TestForm = () => {
     .map(q => answers[q.id])
     .filter(Boolean);
 
-  const filteredOptions = isLuscherTest
-    ? question.options.filter(option => !previousAnswers.includes(option.value))
-    : question.options;
+  const filteredOptions = question.options
+    ? (isLuscherTest
+        ? question.options.filter(option => !previousAnswers.includes(option.value))
+        : question.options)
+    : [];
 
   console.log('Lyusher test:', isLuscherTest);
   console.log('Oldingi javoblar:', previousAnswers);
