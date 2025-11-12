@@ -4,7 +4,6 @@ import {
   ClockCircleOutlined,
   CheckCircleOutlined,
   PlayCircleOutlined,
-  LockOutlined,
   ReloadOutlined,
 } from "@ant-design/icons";
 import { motion } from "framer-motion";
@@ -40,9 +39,6 @@ const TestList = () => {
   const getTestStatusIcon = (test) => {
     if (test.isCompleted) {
       return <CheckCircleOutlined className="text-green-500 text-lg sm:text-xl" />;
-    }
-    if (test.isSensitive) {
-      return <LockOutlined className="text-orange-500 text-lg sm:text-xl" />;
     }
     return <PlayCircleOutlined className="text-blue-500 text-lg sm:text-xl" />;
   };
@@ -116,7 +112,7 @@ const TestList = () => {
               transition={{ delay: index * 0.1 }}
             >
               <Badge.Ribbon
-                text={test.order ? `#${test.order}` : "Test"}
+                text={`#${index + 1}`}
                 color={test.isCompleted ? "green" : "blue"}
               >
                 <Card
@@ -128,7 +124,7 @@ const TestList = () => {
                     <div className="mt-1">{getTestStatusIcon(test)}</div>
                     <div className="flex-1">
                       <h3 className="text-base sm:text-lg font-semibold mb-2">
-                        Test {test.order || index + 1}
+                        Test {index + 1}
                       </h3>
                       <p className="text-gray-600 text-xs sm:text-sm mb-3 line-clamp-2">
                         Psixologik baholash testi
