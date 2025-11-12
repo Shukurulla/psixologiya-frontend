@@ -10,7 +10,10 @@ import {
   Spin,
   Alert,
   Space,
+  Input,
 } from "antd";
+
+const { TextArea } = Input;
 import {
   ArrowLeftOutlined,
   ArrowRightOutlined,
@@ -179,55 +182,67 @@ const TestForm = () => {
               <h3 className="text-base sm:text-lg font-semibold mb-4">{question.text}</h3>
 
               {question.image && (
-                <div className="mb-4">
+                <div className="mb-4 flex justify-center">
                   <img
                     src={question.image}
                     alt="Savol rasmi"
-                    className="max-w-full h-auto rounded-lg border border-gray-300"
-                    style={{ maxHeight: '300px' }}
+                    className="max-w-full h-auto rounded-lg border border-gray-300 shadow-md"
+                    style={{ maxHeight: '400px' }}
                   />
                 </div>
               )}
 
-              <Radio.Group
-                value={answers[question.id]}
-                onChange={(e) => handleAnswerChange(e.target.value)}
-                className="w-full"
-              >
-                <Space direction="vertical" className="w-full" size="small">
-                  {filteredOptions.map((option) => (
-                    <motion.div
-                      key={option.value}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="w-full"
-                    >
-                      <Radio
-                        value={option.value}
-                        className="w-full p-2 sm:p-3 hover:bg-white rounded-lg transition-colors text-sm sm:text-base"
+              {test.data.questionType === 'text' ? (
+                <TextArea
+                  value={answers[question.id]}
+                  onChange={(e) => handleAnswerChange(e.target.value)}
+                  placeholder={question.placeholder || "Javobingizni yozing..."}
+                  rows={4}
+                  className="w-full text-sm sm:text-base"
+                  maxLength={500}
+                  showCount
+                />
+              ) : (
+                <Radio.Group
+                  value={answers[question.id]}
+                  onChange={(e) => handleAnswerChange(e.target.value)}
+                  className="w-full"
+                >
+                  <Space direction="vertical" className="w-full" size="small">
+                    {filteredOptions.map((option) => (
+                      <motion.div
+                        key={option.value}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="w-full"
                       >
-                        <div className="flex items-center space-x-3">
-                          {option.image && (
-                            option.image.startsWith('#') ? (
-                              <div
-                                className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg border-2 border-gray-300 shadow-md"
-                                style={{ backgroundColor: option.image }}
-                              />
-                            ) : (
-                              <img
-                                src={option.image}
-                                alt="Variant rasmi"
-                                className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded border border-gray-300"
-                              />
-                            )
-                          )}
-                          <span>{option.label}</span>
-                        </div>
-                      </Radio>
-                    </motion.div>
-                  ))}
-                </Space>
-              </Radio.Group>
+                        <Radio
+                          value={option.value}
+                          className="w-full p-2 sm:p-3 hover:bg-white rounded-lg transition-colors text-sm sm:text-base"
+                        >
+                          <div className="flex items-center space-x-3">
+                            {option.image && (
+                              option.image.startsWith('#') ? (
+                                <div
+                                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg border-2 border-gray-300 shadow-md"
+                                  style={{ backgroundColor: option.image }}
+                                />
+                              ) : (
+                                <img
+                                  src={option.image}
+                                  alt="Variant rasmi"
+                                  className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded border border-gray-300"
+                                />
+                              )
+                            )}
+                            <span>{option.label}</span>
+                          </div>
+                        </Radio>
+                      </motion.div>
+                    ))}
+                  </Space>
+                </Radio.Group>
+              )}
             </Card>
           </motion.div>
         </AnimatePresence>
