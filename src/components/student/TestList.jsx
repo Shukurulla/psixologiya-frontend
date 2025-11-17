@@ -1,10 +1,11 @@
-import { useEffect } from "react";
-import { Card, Row, Col, Badge, Button, Tag, Empty, Spin, message } from "antd";
+import { useEffect, useState } from "react";
+import { Card, Row, Col, Badge, Button, Tag, Empty, Spin, message, Select } from "antd";
 import {
   ClockCircleOutlined,
   CheckCircleOutlined,
   PlayCircleOutlined,
   ReloadOutlined,
+  GlobalOutlined,
 } from "@ant-design/icons";
 import { motion } from "framer-motion";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -15,6 +16,7 @@ const TestList = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const queryClient = useQueryClient();
+  const [selectedLanguage, setSelectedLanguage] = useState('uz');
 
   const { data: tests, isLoading, refetch } = useQuery({
     queryKey: ["tests"],
@@ -51,7 +53,7 @@ const TestList = () => {
   };
 
   const handleStartTest = (testId) => {
-    navigate(`/student/tests/${testId}`);
+    navigate(`/student/tests/${testId}`, { state: { language: selectedLanguage } });
   };
 
   const handleRefresh = () => {
@@ -84,14 +86,32 @@ const TestList = () => {
 
   return (
     <div className="px-2 sm:px-0">
-      <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
-        <div>
+      <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3">
+        <div className="flex-1">
           <h2 className="text-xl sm:text-2xl font-bold mb-2">Psixologik Testlar</h2>
-          <p className="text-xs sm:text-sm text-gray-600">
+          <p className="text-xs sm:text-sm text-gray-600 mb-3">
             Barcha testlarni to'ldirishingiz so'raladi. Har bir test taxminan 5-20
             daqiqa vaqt oladi.
           </p>
+
+          {/* Language selector */}
+          <div className="flex items-center gap-2">
+            <GlobalOutlined className="text-gray-600" />
+            <span className="text-sm text-gray-600">Til:</span>
+            <Select
+              value={selectedLanguage}
+              onChange={setSelectedLanguage}
+              size="middle"
+              style={{ minWidth: 150 }}
+              options={[
+                { value: 'uz', label: 'O\'zbek' },
+                { value: 'ru', label: 'Русский' },
+                { value: 'qq', label: 'Қарақалпақ' },
+              ]}
+            />
+          </div>
         </div>
+
         <Button
           icon={<ReloadOutlined />}
           onClick={handleRefresh}

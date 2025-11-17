@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import {
   Card,
   Radio,
@@ -27,13 +27,17 @@ import { testAPI } from "../../services/api";
 const TestForm = () => {
   const { testId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState({});
   const [submitting, setSubmitting] = useState(false);
 
+  // Get selected language from navigation state
+  const selectedLanguage = location.state?.language || "uz";
+
   const { data: test, isLoading } = useQuery({
-    queryKey: ["test", testId],
-    queryFn: () => testAPI.getTest(testId),
+    queryKey: ["test", testId, selectedLanguage],
+    queryFn: () => testAPI.getTest(testId, selectedLanguage),
   });
 
   const handleAnswerChange = (value) => {
@@ -132,32 +136,37 @@ const TestForm = () => {
   const progress = ((currentQuestion + 1) / test.data.questions.length) * 100;
 
   // Lyusher testi uchun: allaqachon tanlangan ranglarni filtrlaymiz
-  const isLuscherTest = test.data.scoringMethod === 'luscher';
+  const isLuscherTest = test.data.scoringMethod === "luscher";
   const selectedValues = Object.values(answers);
 
   // Faqat hozirgi savoldan oldingi javoblarni olamiz
   const previousAnswers = test.data.questions
     .slice(0, currentQuestion)
-    .map(q => answers[q.id])
+    .map((q) => answers[q.id])
     .filter(Boolean);
 
   const filteredOptions = question.options
-    ? (isLuscherTest
-        ? question.options.filter(option => !previousAnswers.includes(option.value))
-        : question.options)
+    ? isLuscherTest
+      ? question.options.filter(
+          (option) => !previousAnswers.includes(option.value)
+        )
+      : question.options
     : [];
 
-  console.log('Lyusher test:', isLuscherTest);
-  console.log('Oldingi javoblar:', previousAnswers);
-  console.log('Filtrlangan variantlar:', filteredOptions.length);
+  console.log("Lyusher test:", isLuscherTest);
+  console.log("Oldingi javoblar:", previousAnswers);
+  console.log("Filtrlangan variantlar:", filteredOptions.length);
 
   return (
     <div className="max-w-4xl mx-auto px-2 sm:px-4">
       <Card className="mb-3 sm:mb-4">
         <div className="mb-4 sm:mb-6">
-          <h2 className="text-lg sm:text-2xl font-bold mb-2">Test {test.data.order || ''}</h2>
+          <h2 className="text-lg sm:text-2xl font-bold mb-2">
+            Test {test.data.order || ""}
+          </h2>
           <p className="text-sm sm:text-base text-gray-600 mb-4">
-            Iltimos, har bir savolga diqqat bilan javob bering. To'g'ri yoki noto'g'ri javob yo'q, faqat sizning fikringiz muhim.
+            Iltimos, har bir savolga diqqat bilan javob bering. To'g'ri yoki
+            noto'g'ri javob yo'q, faqat sizning fikringiz muhim.
           </p>
           <Progress
             percent={Math.round(progress)}
@@ -181,7 +190,9 @@ const TestForm = () => {
             transition={{ duration: 0.3 }}
           >
             <Card className="bg-gray-50">
-              <h3 className="text-base sm:text-lg font-semibold mb-4">{question.text}</h3>
+              <h3 className="text-base sm:text-lg font-semibold mb-4">
+                {question.text}
+              </h3>
 
               {question.image && (
                 <div className="mb-4 flex justify-center">
@@ -189,12 +200,12 @@ const TestForm = () => {
                     src={question.image}
                     alt="Savol rasmi"
                     className="max-w-full h-auto rounded-lg border border-gray-300 shadow-md"
-                    style={{ maxHeight: '400px' }}
+                    style={{ maxHeight: "400px" }}
                   />
                 </div>
               )}
 
-              {test.data.questionType === 'text' ? (
+              {test.data.questionType === "text" ? (
                 <TextArea
                   value={answers[question.id]}
                   onChange={(e) => handleAnswerChange(e.target.value)}
@@ -223,8 +234,8 @@ const TestForm = () => {
                           className="w-full p-2 sm:p-3 hover:bg-white rounded-lg transition-colors text-sm sm:text-base"
                         >
                           <div className="flex items-center space-x-3">
-                            {option.image && (
-                              option.image.startsWith('#') ? (
+                            {option.image &&
+                              (option.image.startsWith("#") ? (
                                 <div
                                   className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg border-2 border-gray-300 shadow-md"
                                   style={{ backgroundColor: option.image }}
@@ -235,8 +246,7 @@ const TestForm = () => {
                                   alt="Variant rasmi"
                                   className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded border border-gray-300"
                                 />
-                              )
-                            )}
+                              ))}
                             <span>{option.label}</span>
                           </div>
                         </Radio>
@@ -288,7 +298,9 @@ const TestForm = () => {
 
       {/* Question Navigation */}
       <Card>
-        <h4 className="font-semibold mb-3 text-sm sm:text-base">Savollar navigatsiyasi</h4>
+        <h4 className="font-semibold mb-3 text-sm sm:text-base">
+          Savollar navigatsiyasi
+        </h4>
         <div className="grid grid-cols-5 sm:grid-cols-8 md:grid-cols-10 gap-2">
           {test.data.questions.map((q, index) => (
             <Button
